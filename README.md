@@ -1,356 +1,117 @@
-# Saylani Medical Help Desk - Refactored System
+# Saylani Medical Analytical Dashboard
 
-## 🎯 Overview
+An AI-powered analytics platform designed to provide actionable insights into medical help desk operations. This system processes patient data, generates a structured knowledge base, and provides an interactive dashboard with an intelligent chatbot assistant.
 
-This is a **production-ready, JSON-based analytics chatbot system** for the Saylani Medical Help Desk. The system analyzes patient data, generates structured insights, and provides an AI-powered chatbot to explain analytics to administrators.
+## Key Features
 
-## ✨ Key Features
+- **Automated Data Pipeline**: robust data cleaning and exploratory data analysis (EDA) to prepare raw patient records for insights.
+- **JSON Knowledge Base**: Automatically generates a structured JSON knowledge base from analytics data for efficient querying.
+- **AI Analytics Chatbot**: Powered by Google's **Gemini 2.0 Flash**, the chatbot answers questions about disease trends, doctor workloads, and geographic distribution.
+- **Smart Query Routing**: The system intelligently distinguishes between analytics queries (answered by data) and medical advice questions (redirected with a safety disclaimer).
+- **Interactive Dashboard**: A Streamlit-based UI featuring dynamic charts, metrics, and a chat interface.
+- **FastAPI Backend**: A high-performance API server handling data retrieval and LLM interactions.
+- **Resilient Architecture**: Implements automatic fallback mechanisms to ensure the system remains operational even if the external AI API is unavailable.
 
-### 1. **JSON Knowledge Base**
-- Structured JSON format for all analytics data
-- Easy to query and extend
-- Machine-readable and human-readable
-- Supports real-world JSON data input
+## Technology Stack
 
-### 2. **Analytics-Driven Chatbot**
-- Interprets disease trends, doctor workload, and geographic distribution
-- Uses Gemini API when available
-- **Smart fallback** to JSON KB when API quota is exceeded
-- Always provides accurate, data-driven responses
+- **Language**: Python 3.10+
+- **Frontend**: Streamlit
+- **Backend**: FastAPI, Uvicorn
+- **AI/LLM**: Google Gemini 2.0 Flash
+- **Data Processing**: Pandas, NumPy
+- **Visualization**: Plotly, Matplotlib, Seaborn
 
-### 3. **No Voice Features**
-- Streamlined codebase
-- Focus on core analytics functionality
-- Removed unnecessary dependencies
+## Project Structure
 
-### 4. **Production-Ready**
-- Clean architecture
-- Error handling and fallbacks
-- Caching for performance
-- Comprehensive logging
-
-## 📁 Project Structure
-
-```
+```text
 SaylaniHealthMangementHelpDesk/
-├── data/
-│   ├── raw/                    # Raw CSV data
-│   ├── cleaned/                # Cleaned CSV data
-│   ├── knowledge_base/         # JSON knowledge base
-│   │   └── analytics_kb.json   # Main KB file
-│   ├── eda_output/             # Analytics visualizations
-│   └── cache/                  # LLM response cache
 ├── src/
-│   ├── data_cleaning.py        # Data cleaning pipeline
-│   ├── json_kb_generator.py    # Generates JSON KB from data
-│   ├── json_kb.py              # JSON KB loader and query engine
-│   ├── llm_refactored.py       # LLM with smart API fallback
-│   ├── app_refactored.py       # FastAPI application
-│   ├── dashboard.py            # Streamlit dashboard
-│   ├── eda_enhanced.py         # Enhanced EDA
-│   └── nlp.py                  # NLP utilities
-├── run_pipeline_refactored.bat # Main pipeline script
-├── requirements.txt            # Python dependencies
-└── .env                        # Environment variables
+│   ├── app.py                # Main FastAPI application with query routing
+│   ├── dashboard.py          # Streamlit dashboard interface
+│   ├── llm.py                # LLM integration (Gemini 2.0) with fallback logic
+│   ├── json_kb.py            # Knowledge base loader and query engine
+│   ├── json_kb_generator.py  # Script to generate JSON KB from data
+│   ├── data_cleaning.py      # Data preprocessing pipeline
+│   ├── eda_enhanced.py       # Exploratory Data Analysis generation
+│   └── nlp.py                # NLP utilities
+├── data/
+│   ├── raw/                  # Raw input CSV files
+│   ├── cleaned/              # Processed data files
+│   ├── knowledge_base/       # Generated analytics_kb.json
+│   └── eda_output/           # Generated static charts
+├── tests/                    # Unit and integration tests
+├── run_pipeline.bat          # One-click startup script
+├── requirements.txt          # Project dependencies
+└── README.md                 # Project documentation
 ```
 
-## 🚀 Quick Start
+## Installation and Setup
 
-### 1. Install Dependencies
+1.  **Clone the Repository**
+    ```bash
+    git clone https://github.com/MuhammadHanzala-13/SaylaniMedicalAnalyticalDashboard.git
+    cd SaylaniMedicalAnalyticalDashboard
+    ```
+
+2.  **Create a Virtual Environment**
+    ```bash
+    python -m venv venv
+    # Windows
+    venv\Scripts\activate
+    # Mac/Linux
+    source venv/bin/activate
+    ```
+
+3.  **Install Dependencies**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4.  **Configure Environment Variables**
+    -   Copy `.env.example` to a new file named `.env`.
+    -   Add your Google Gemini API key:
+        ```text
+        GEMINI_API_KEY=your_api_key_here
+        ```
+
+## Usage
+
+### Running the Full Pipeline
+The easiest way to start the system is using the provided batch script. This script cleans the data, generates the knowledge base, starts the backend API, and launches the dashboard.
 
 ```bash
-pip install -r requirements.txt
+.\run_pipeline.bat
 ```
 
-### 2. Set Up Environment
+### Manual Startup
+If you prefer to run components individually:
 
-Create `.env` file:
-```env
-GEMINI_API_KEY=your_api_key_here
-```
+1.  **Generate Knowledge Base**:
+    ```bash
+    python src/json_kb_generator.py
+    ```
 
-**Note:** The system works perfectly without an API key (uses JSON KB fallback).
+2.  **Start Backend API**:
+    ```bash
+    uvicorn src.app:app --reload
+    ```
 
-### 3. Run the Pipeline
+3.  **Start Dashboard**:
+    ```bash
+    streamlit run src/dashboard.py
+    ```
 
-```bash
-.\run_pipeline_refactored.bat
-```
+## API Endpoints
 
-This will:
-1. Clean the data
-2. Generate JSON knowledge base
-3. Run enhanced EDA
-4. Start the API server (port 8000)
-5. Start the dashboard (port 8501)
+The FastAPI backend exposes the following endpoints:
 
-### 4. Access the System
+-   `GET /`: System status and version.
+-   `POST /chat/query`: Main chatbot endpoint. Handles query classification and response generation.
+-   `GET /analytics/disease-trends`: Returns disease statistics.
+-   `GET /analytics/doctor-workload`: Returns doctor performance metrics.
+-   `GET /analytics/geographic-distribution`: Returns patient distribution by area.
+-   `GET /analytics/summary`: Returns executive summary metrics.
 
-- **Dashboard**: http://localhost:8501
-- **API**: http://localhost:8000
-- **API Docs**: http://localhost:8000/docs
+## License
 
-## 📊 JSON Knowledge Base Structure
-
-The system generates a comprehensive JSON knowledge base:
-
-```json
-{
-  "metadata": {
-    "generated_at": "2025-12-01T14:00:00",
-    "version": "2.0",
-    "format": "json"
-  },
-  "analytics": {
-    "disease_trends": {
-      "overview": {...},
-      "top_10_diseases": [...],
-      "interpretation": "..."
-    },
-    "doctor_workload": {
-      "overview": {...},
-      "top_10_busiest_doctors": [...],
-      "interpretation": "..."
-    },
-    "geographic_distribution": {
-      "overview": {...},
-      "top_10_areas": [...],
-      "interpretation": "..."
-    }
-  },
-  "entities": {
-    "doctors": [...],
-    "branches": [...],
-    "diseases": [...]
-  },
-  "summary": {
-    "total_patients": 200,
-    "key_insights": [...]
-  }
-}
-```
-
-## 🤖 Chatbot Usage
-
-### Example Queries
-
-```
-✅ "What are the top 10 diseases?"
-✅ "Who is the busiest doctor?"
-✅ "Which area has the most patients?"
-✅ "Explain the disease trends"
-✅ "Show me the geographic distribution"
-✅ "What is the average doctor workload?"
-```
-
-### How It Works
-
-1. **User asks a question** via dashboard or API
-2. **System loads JSON KB** context
-3. **Tries Gemini API** (if available and quota allows)
-4. **Falls back to JSON extraction** if API fails
-5. **Returns accurate answer** based on real data
-
-## 🔄 API Endpoints
-
-### Analytics Endpoints
-
-```http
-GET /analytics/disease-trends
-GET /analytics/doctor-workload
-GET /analytics/geographic-distribution
-GET /analytics/summary
-```
-
-### Chatbot Endpoint
-
-```http
-POST /chat/query
-Content-Type: application/json
-
-{
-  "query": "What is the most common disease?"
-}
-```
-
-### Search Endpoint
-
-```http
-POST /analytics/search
-Content-Type: application/json
-
-{
-  "query": "doctor workload"
-}
-```
-
-## 🛠️ Working with Real JSON Data
-
-The system is designed to work with real JSON data. To use your own data:
-
-### Option 1: CSV to JSON
-
-1. Place your CSV files in `data/raw/`
-2. Run the pipeline - it will convert to JSON automatically
-
-### Option 2: Direct JSON Input
-
-1. Create a custom data loader in `src/json_kb_generator.py`
-2. Modify the `generate_from_data()` method to accept JSON input
-3. The KB generator will create the structured analytics KB
-
-Example:
-
-```python
-from src.json_kb_generator import JSONKnowledgeBaseGenerator
-
-generator = JSONKnowledgeBaseGenerator()
-
-# Load your JSON data
-import json
-with open('your_data.json') as f:
-    data = json.load(f)
-
-# Convert to DataFrames or process directly
-# Then generate KB
-kb = generator.generate_from_data(doctors_df, branches_df, diseases_df, patients_df)
-```
-
-## 🔐 API Fallback System
-
-The system has a **3-tier fallback mechanism**:
-
-1. **Tier 1: Gemini API** (if available and quota allows)
-   - Best quality responses
-   - Natural language generation
-   
-2. **Tier 2: Cached Responses** (if query was asked before)
-   - Instant responses
-   - Zero API calls
-   
-3. **Tier 3: JSON KB Extraction** (always available)
-   - Direct data extraction
-   - 100% accurate
-   - No external dependencies
-
-**Result:** The system NEVER fails to provide an answer.
-
-## 📈 Performance
-
-- **Response Time**: <100ms (JSON fallback), <2s (API)
-- **Accuracy**: 100% (data-driven, no hallucinations)
-- **Uptime**: 99.9% (no external dependencies required)
-- **Scalability**: Handles 1000+ requests/day easily
-
-## 🧪 Testing
-
-Test the JSON KB generator:
-```bash
-python src/json_kb_generator.py
-```
-
-Test the JSON KB loader:
-```bash
-python src/json_kb.py
-```
-
-Test the LLM:
-```bash
-python src/llm_refactored.py
-```
-
-## 🔧 Configuration
-
-### Adjusting API Behavior
-
-Edit `src/llm_refactored.py`:
-
-```python
-# To disable API completely
-self.api_available = False
-
-# To change model
-self.model = genai.GenerativeModel('gemini-2.0-flash')
-```
-
-### Customizing KB Generation
-
-Edit `src/json_kb_generator.py` to add custom analytics:
-
-```python
-def _analyze_custom_metric(self, data):
-    """Add your custom analytics here"""
-    return {
-        "metric_name": "value",
-        "interpretation": "..."
-    }
-```
-
-## 📝 Removed Features
-
-The following features were removed to streamline the system:
-
-- ❌ Voice/ASR/TTS functionality
-- ❌ RAG pipeline (replaced with JSON KB)
-- ❌ Markdown knowledge base
-- ❌ Sentence transformers
-- ❌ FAISS vector database
-
-## 🎓 Best Practices
-
-1. **Always regenerate KB** after data updates
-2. **Monitor API usage** via logs
-3. **Use caching** for repeated queries
-4. **Validate JSON KB** after generation
-5. **Test fallback** by disabling API
-
-## 🐛 Troubleshooting
-
-### KB Not Loading
-```bash
-# Regenerate KB
-python src/json_kb_generator.py
-```
-
-### API Not Working
-- Check `.env` file has `GEMINI_API_KEY`
-- System will automatically use JSON fallback
-
-### Dashboard Not Showing Data
-- Ensure pipeline ran successfully
-- Check `data/knowledge_base/analytics_kb.json` exists
-
-## 📦 Dependencies
-
-Core dependencies:
-- `fastapi` - API framework
-- `streamlit` - Dashboard
-- `pandas` - Data processing
-- `google-generativeai` - Gemini API (optional)
-- `plotly` - Visualizations
-
-## 🚀 Deployment
-
-For production deployment:
-
-1. Set environment variables
-2. Use `gunicorn` for API:
-   ```bash
-   gunicorn src.app_refactored:app -w 4 -k uvicorn.workers.UvicornWorker
-   ```
-3. Use `streamlit` cloud or docker for dashboard
-4. Set up monitoring and logging
-
-## 📄 License
-
-MIT License - See LICENSE file
-
-## 🤝 Support
-
-For issues or questions, contact the development team.
-
----
-
-**Version:** 2.0  
-**Last Updated:** 2025-12-01  
-**Status:** Production Ready ✅
+This project is intended for educational and demonstration purposes as part of the SMIT Bootcamp.
