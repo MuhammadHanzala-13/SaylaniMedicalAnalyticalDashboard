@@ -1,0 +1,29 @@
+======================================================================
+SAYLANI MEDICAL HELP DESK - EDA SUMMARY REPORT
+======================================================================
+
+Generated: 2025-11-28 18:26:25
+
+----------------------------------------------------------------------
+DATASET OVERVIEW
+----------------------------------------------------------------------
+Total Doctors: 15
+Total Branches: 4
+Total Diseases: 14
+Total Timings: 16
+Total Patients: 200
+
+----------------------------------------------------------------------
+KEY STATISTICS
+----------------------------------------------------------------------
+
+Most common disease: Dengue Fever (21 cases)
+Unique diseases treated: 78
+
+Average patients per doctor: 13.3
+Busiest doctor: D002 (20 patients)
+
+Areas served: 12
+Most served area: Gulshan (27 patients)
+
+======================================================================
